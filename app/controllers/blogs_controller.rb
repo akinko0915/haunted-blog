@@ -15,7 +15,11 @@ class BlogsController < ApplicationController
     @blog = Blog.new
   end
 
-  def edit; end
+  def edit
+    if @blog.user != current_user
+      redirect_to blog_url(@blog), alert: "許可されていない操作です。"
+    end
+  end
 
   def create
     @blog = current_user.blogs.new(blog_params)
