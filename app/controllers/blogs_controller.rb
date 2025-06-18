@@ -3,26 +3,21 @@
 class BlogsController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[index show]
 
-  before_action :set_blog, only: %i[show edit update destroy]
+  before_action :set_blog, only: %i[edit update destroy]
+  before_action :set_blog_for_public, only: %i[show]
 
   def index
     @blogs = Blog.search(params[:term].to_s).published.default_order
   end
 
-  def show
-    if (@blog.user != current_user) && @blog.secret
-      redirect_to blogs_url, alert: "許可されていない操作です。"
-    end
+  def show;
   end
 
   def new
     @blog = Blog.new
   end
 
-  def edit
-    if @blog.user != current_user
-      redirect_to blog_url(@blog), alert: "許可されていない操作です。"
-    end
+  def edit;
   end
 
   def create
@@ -52,6 +47,10 @@ class BlogsController < ApplicationController
   private
 
   def set_blog
+    @blog = current_user.blogs.find(params[:id])
+  end
+
+  def set_blog_for_public
     @blog = Blog.find(params[:id])
   end
 
