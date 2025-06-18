@@ -10,15 +10,13 @@ class BlogsController < ApplicationController
     @blogs = Blog.search(params[:term].to_s).published.default_order
   end
 
-  def show;
-  end
+  def show; end
 
   def new
     @blog = Blog.new
   end
 
-  def edit;
-  end
+  def edit; end
 
   def create
     @blog = current_user.blogs.new(blog_params)
@@ -52,10 +50,10 @@ class BlogsController < ApplicationController
 
   def set_blog_for_public
     @blog = if current_user
-      Blog.published.or(Blog.where(user_id: current_user.id)).find(params[:id])
-    else
-      Blog.published.find(params[:id])
-    end
+              Blog.published.or(Blog.where(user_id: current_user.id)).find(params[:id])
+            else
+              Blog.published.find(params[:id])
+            end
   end
 
   def blog_params
