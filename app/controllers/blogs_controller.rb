@@ -51,7 +51,11 @@ class BlogsController < ApplicationController
   end
 
   def set_blog_for_public
-    @blog = Blog.find(params[:id])
+    @blog = if current_user
+      Blog.published.or(Blog.where(user_id: current_user.id)).find(params[:id])
+    else
+      Blog.published.find(params[:id])
+    end
   end
 
   def blog_params
