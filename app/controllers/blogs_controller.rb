@@ -9,7 +9,11 @@ class BlogsController < ApplicationController
     @blogs = Blog.search(params[:term].to_s).published.default_order
   end
 
-  def show; end
+  def show
+    if (@blog.user != current_user) && @blog.secret
+      redirect_to blogs_url, alert: "許可されていない操作です。"
+    end
+  end
 
   def new
     @blog = Blog.new
