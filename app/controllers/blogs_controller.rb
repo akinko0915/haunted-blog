@@ -2,7 +2,6 @@
 
 class BlogsController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[index show]
-
   before_action :set_blog, only: %i[edit update destroy]
 
   def index
@@ -10,11 +9,7 @@ class BlogsController < ApplicationController
   end
 
   def show
-    @blog = if current_user
-              Blog.published.or(Blog.where(user_id: current_user.id)).find(params[:id])
-            else
-              Blog.published.find(params[:id])
-            end
+    @blog = Blog.viewable_by(current_user).find(params[:id])
   end
 
   def new
